@@ -1,18 +1,18 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { PrimaryButton } from '../../../components/Button';
-import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../../../constants';
+import { PrimaryButton } from '../../components/Button';
+import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../../constants';
 
 export default function SignUpScreen() {
   const [name, setName] = useState('');
@@ -21,16 +21,19 @@ export default function SignUpScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleSignUp = () => {
+    if (!name || !email || !password) return;
     setLoading(true);
-    console.log('Signing up:', { name, email, password });
-    setTimeout(() => setLoading(false), 1500);
+    setTimeout(() => {
+      setLoading(false);
+      router.replace('/(auth)/signin');
+    }, 1200);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.flex}
+        style={{ flex: 1 }}
       >
         <ScrollView
           contentContainerStyle={styles.scroll}
@@ -81,19 +84,16 @@ export default function SignUpScreen() {
             </View>
           </View>
 
-          {/* ⚫ Primary Button */}
           <PrimaryButton
             label="Create Account"
             onPress={handleSignUp}
             loading={loading}
-            style={styles.buttonSpacing}
+            style={{ marginTop: SPACING.lg }}
           />
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              Already have an account?{' '}
-            </Text>
-            <TouchableOpacity onPress={() => router.push('/(auth)/signin')}>
+            <Text style={styles.footerText}>Already have an account? </Text>
+            <TouchableOpacity onPress={() => router.replace('/(auth)/signin')}>
               <Text style={styles.footerLink}>Sign in</Text>
             </TouchableOpacity>
           </View>
@@ -105,7 +105,6 @@ export default function SignUpScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
-  flex: { flex: 1 },
   scroll: {
     flexGrow: 1,
     padding: SPACING.lg,
@@ -135,9 +134,6 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.md,
     ...TYPOGRAPHY.body,
     color: COLORS.textPrimary,
-  },
-  buttonSpacing: {
-    marginTop: SPACING.lg,
   },
   footer: {
     flexDirection: 'row',

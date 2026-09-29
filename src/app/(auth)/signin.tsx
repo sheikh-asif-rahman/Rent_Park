@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SecondaryButton } from '../../components/Button';
+import { PrimaryButton } from '../../components/Button';
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../../constants';
 
 export default function SignInScreen() {
@@ -22,8 +22,15 @@ export default function SignInScreen() {
   const handleSignIn = () => {
     setLoading(true);
     console.log('Signing in:', { email, password });
-    // Simulate request
-    setTimeout(() => setLoading(false), 1500);
+    setTimeout(() => {
+      setLoading(false);
+      // 🚧 TEMP: skip auth → driver dashboard
+      router.replace('/driver/home');
+    }, 800);
+  };
+
+  const goToSignUp = () => {
+    router.push('/(auth)/signup');
   };
 
   return (
@@ -73,8 +80,7 @@ export default function SignInScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* ⚫ Primary Button */}
-          <SecondaryButton
+          <PrimaryButton
             label="Sign In"
             onPress={handleSignIn}
             loading={loading}
@@ -85,7 +91,7 @@ export default function SignInScreen() {
             <Text style={styles.footerText}>
               Don't have an account?{' '}
             </Text>
-            <TouchableOpacity onPress={() => router.push('/(auth)/signup')}>
+            <TouchableOpacity onPress={goToSignUp} activeOpacity={0.7}>
               <Text style={styles.footerLink}>Sign up</Text>
             </TouchableOpacity>
           </View>
@@ -135,9 +141,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textDecorationLine: 'underline',
   },
-  buttonSpacing: {
-    marginTop: SPACING.lg,
-  },
+  buttonSpacing: { marginTop: SPACING.lg },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',

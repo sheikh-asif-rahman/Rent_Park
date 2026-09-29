@@ -26,7 +26,7 @@ export default function LoadingScreen() {
     ]).start();
 
     const timer = setTimeout(() => {
-      router.push('/(auth)/signup');
+      router.replace('/(auth)/signin');
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
@@ -81,28 +81,6 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     backgroundColor: COLORS.dark,
     marginTop: SPACING.sm,
-  },
-  middleSection: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.md,
-  },
-  headline: {
-    ...TYPOGRAPHY.h1,
-    color: COLORS.textPrimary,
-    fontSize: 46,
-    fontWeight: '800',
-    letterSpacing: -0.5,
-    textAlign: 'center',
-  },
-  subheadline: {
-    ...TYPOGRAPHY.body,
-    color: COLORS.textSecondary,
-    textAlign: 'center',
-    marginTop: SPACING.sm,
-    lineHeight: 24,
-    paddingHorizontal: SPACING.lg,
   },
   bottomSection: {
     alignItems: 'center',
