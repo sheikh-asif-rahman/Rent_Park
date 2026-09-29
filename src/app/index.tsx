@@ -1,98 +1,128 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
+import LottieView from 'lottie-react-native';
+import { useEffect, useRef } from 'react';
+import { Animated, Easing, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { COLORS, SPACING, TYPOGRAPHY } from '../constants';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+export default function LoadingScreen() {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.92)).current;
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 900,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.ease),
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 900,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.ease),
+      }),
+    ]).start();
+
+    const timer = setTimeout(() => {
+      router.push('/(auth)/signup');
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+    <SafeAreaView style={styles.container}>
+      <Animated.View
+        style={[
+          styles.topSection,
+          { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
+        ]}
+      >
+        <Text style={styles.brand}>Rent_Park</Text>
+        <Animated.View style={styles.brandUnderline} />
+      </Animated.View>
 
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+      <Animated.View style={[styles.middleSection, { opacity: fadeAnim }]}>
+        <Text style={styles.headline}>Welcome</Text>
+        <Text style={styles.subheadline}>
+          Find your perfect stay with ease.
+        </Text>
+      </Animated.View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+      <Animated.View style={[styles.bottomSection, { opacity: fadeAnim }]}>
+        <LottieView
+          source={require('../assets/animations/loading.json')}
+          autoPlay
+          loop
+          style={styles.animation}
+        />
+        <Text style={styles.loadingLabel}>Getting things ready...</Text>
+      </Animated.View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    backgroundColor: COLORS.background,
+    justifyContent: 'space-between',
+    paddingVertical: SPACING.xxl,
+    paddingHorizontal: SPACING.lg,
   },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
+  topSection: {
     alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    marginTop: SPACING.xl,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  brand: {
+    ...TYPOGRAPHY.h1,
+    color: COLORS.textPrimary,
+    fontSize: 38,
+    letterSpacing: 2,
+    fontWeight: '800',
+  },
+  brandUnderline: {
+    width: 70,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: COLORS.dark,
+    marginTop: SPACING.sm,
+  },
+  middleSection: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md,
   },
-  title: {
+  headline: {
+    ...TYPOGRAPHY.h1,
+    color: COLORS.textPrimary,
+    fontSize: 46,
+    fontWeight: '800',
+    letterSpacing: -0.5,
     textAlign: 'center',
   },
-  code: {
-    textTransform: 'uppercase',
+  subheadline: {
+    ...TYPOGRAPHY.body,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    marginTop: SPACING.sm,
+    lineHeight: 24,
+    paddingHorizontal: SPACING.lg,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  bottomSection: {
+    alignItems: 'center',
+    marginBottom: SPACING.xl,
+  },
+  animation: {
+    width: 100,
+    height: 100,
+  },
+  loadingLabel: {
+    ...TYPOGRAPHY.caption,
+    color: COLORS.textSecondary,
+    marginTop: SPACING.sm,
+    letterSpacing: 1,
   },
 });
