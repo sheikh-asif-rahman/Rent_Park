@@ -11,15 +11,19 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../../constants';
+import { PrimaryButton } from '../../../components/Button';
+import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../../../constants';
 
 export default function SignUpScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSignUp = () => {
+    setLoading(true);
     console.log('Signing up:', { name, email, password });
+    setTimeout(() => setLoading(false), 1500);
   };
 
   return (
@@ -77,13 +81,13 @@ export default function SignUpScreen() {
             </View>
           </View>
 
-          <TouchableOpacity
-            style={styles.primaryButton}
+          {/* ⚫ Primary Button */}
+          <PrimaryButton
+            label="Create Account"
             onPress={handleSignUp}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.primaryButtonText}>Create Account</Text>
-          </TouchableOpacity>
+            loading={loading}
+            style={styles.buttonSpacing}
+          />
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>
@@ -132,14 +136,9 @@ const styles = StyleSheet.create({
     ...TYPOGRAPHY.body,
     color: COLORS.textPrimary,
   },
-  primaryButton: {
-    backgroundColor: COLORS.dark,
-    paddingVertical: SPACING.md,
-    borderRadius: RADIUS.lg,
-    alignItems: 'center',
+  buttonSpacing: {
     marginTop: SPACING.lg,
   },
-  primaryButtonText: { ...TYPOGRAPHY.button, color: COLORS.textOnDark },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',

@@ -11,14 +11,19 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { SecondaryButton } from '../../components/Button';
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../../constants';
 
 export default function SignInScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSignIn = () => {
+    setLoading(true);
     console.log('Signing in:', { email, password });
+    // Simulate request
+    setTimeout(() => setLoading(false), 1500);
   };
 
   return (
@@ -68,13 +73,13 @@ export default function SignInScreen() {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
-            style={styles.primaryButton}
+          {/* ⚫ Primary Button */}
+          <SecondaryButton
+            label="Sign In"
             onPress={handleSignIn}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.primaryButtonText}>Sign In</Text>
-          </TouchableOpacity>
+            loading={loading}
+            style={styles.buttonSpacing}
+          />
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>
@@ -130,14 +135,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textDecorationLine: 'underline',
   },
-  primaryButton: {
-    backgroundColor: COLORS.dark,
-    paddingVertical: SPACING.md,
-    borderRadius: RADIUS.lg,
-    alignItems: 'center',
+  buttonSpacing: {
     marginTop: SPACING.lg,
   },
-  primaryButtonText: { ...TYPOGRAPHY.button, color: COLORS.textOnDark },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',

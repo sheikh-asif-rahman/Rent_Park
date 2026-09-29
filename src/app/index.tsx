@@ -43,13 +43,6 @@ export default function LoadingScreen() {
         <Animated.View style={styles.brandUnderline} />
       </Animated.View>
 
-      <Animated.View style={[styles.middleSection, { opacity: fadeAnim }]}>
-        <Text style={styles.headline}>Welcome</Text>
-        <Text style={styles.subheadline}>
-          Find your perfect stay with ease.
-        </Text>
-      </Animated.View>
-
       <Animated.View style={[styles.bottomSection, { opacity: fadeAnim }]}>
         <LottieView
           source={require('../assets/animations/loading.json')}
